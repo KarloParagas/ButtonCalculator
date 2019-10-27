@@ -17,15 +17,39 @@ namespace SuperCalc
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Clears the display box when user clicks the "Clear" button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clearButton_Click(object sender, EventArgs e)
         {
             displayBox.Text = "";
         }
 
-        private void buttonClick(object sender, EventArgs e)
+        /// <summary>
+        /// Displays the corresponding numbers clicked to the display box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void numbersButton(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
             displayBox.Text = displayBox.Text + btn.Text;
+        }
+
+        /// <summary>
+        /// Clears the first set of operands when an operator is clicked.
+        /// Applies the correct operator to perform the calculation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void operatorButton(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            displayBox.Text = "";
+
+            //TODO: Make the operator functional
         }
     }
 }
