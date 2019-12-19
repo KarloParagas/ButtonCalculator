@@ -64,9 +64,14 @@ namespace SuperCalc
                 double result = Math.Sqrt(num1);
                 displayBox.Text = result.ToString();
             }
-            else 
+            else if (op == "1/X") 
             {
-                displayBox.Text = "";                      
+                double result = (double) 1 / num1;
+                displayBox.Text = result.ToString();
+            }
+            else
+            {
+                displayBox.Text = "";
             }
         }
 
