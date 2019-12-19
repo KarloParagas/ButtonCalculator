@@ -17,12 +17,17 @@ namespace SuperCalc
             InitializeComponent();
         }
 
+        //Properties
+        public double num1 { get; set; }
+        public string op { get; set; }
+        public double num2 { get; set; }
+
         /// <summary>
         /// Clears the display box when user clicks the "Clear" button
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void clearButton_Click(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
             displayBox.Text = "";
         }
@@ -32,24 +37,64 @@ namespace SuperCalc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void numbersButton(object sender, EventArgs e)
+        private void NumbersButton(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            displayBox.Text = displayBox.Text + btn.Text;
+
+            displayBox.Text += btn.Text;
         }
 
         /// <summary>
-        /// Clears the first set of operands when an operator is clicked.
-        /// Applies the correct operator to perform the calculation.
+        /// Grabs and clears the first set of operands when an operator is clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void operatorButton(object sender, EventArgs e)
+        private void OperatorButton(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
-            displayBox.Text = "";
 
-            //TODO: Make the operator functional
+            //Grab the operator that the user inputted and set it to the property above
+            op = (sender as Button).Text;
+
+            //Grab the first set of numbers that the user inputted and set it to the property above
+            num1 = Convert.ToDouble(displayBox.Text);
+
+            displayBox.Text = "";
+        }
+
+        private void EqualsButton_Click(object sender, EventArgs e)
+        {
+            //Grab the second set of numbers that the user inputted and set it to the property above
+            num2 = Convert.ToDouble(displayBox.Text);
+
+            double result = PerformCalculation();
+
+            //Display the result in the display box
+            displayBox.Text = result.ToString();
+        }
+
+        private double PerformCalculation()
+        {
+            double result = 0;
+
+            if (op == "/") 
+            {
+                result = (double)num1 / num2;
+            }
+            if (op == "*")
+            {
+                result = (double)num1 * num2;
+            }
+            if (op == "-")
+            {
+                result = (double)num1 - num2;
+            }
+            if (op == "+")
+            {
+                result = (double)num1 + num2;
+            }
+
+            return result;
         }
     }
 }
