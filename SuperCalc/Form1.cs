@@ -59,7 +59,15 @@ namespace SuperCalc
             //Grab the first set of numbers that the user inputted and set it to the property above
             num1 = Convert.ToDouble(displayBox.Text);
 
-            displayBox.Text = "";
+            if (op == "sqrt")
+            {
+                double result = Math.Sqrt(num1);
+                displayBox.Text = result.ToString();
+            }
+            else 
+            {
+                displayBox.Text = "";                      
+            }
         }
 
         private void EqualsButton_Click(object sender, EventArgs e)
