@@ -20,7 +20,6 @@ namespace SuperCalc
         //Properties
         public double num { get; set; }
         public string op { get; set; }
-        //public double num2 { get; set; }
 
         /// <summary>
         /// Clears the display box when user clicks the "Clear" button
@@ -45,7 +44,7 @@ namespace SuperCalc
         }
 
         /// <summary>
-        /// Grabs and clears the first set of operands when an operator is clicked.
+        /// Grabs then clears the first set of operand when an operator is clicked.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -73,6 +72,11 @@ namespace SuperCalc
             }
         }
 
+        /// <summary>
+        /// Performs the necessary calculation between the two number inputs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EqualsButton_Click(object sender, EventArgs e)
         {
             //Grab the second set of numbers that the user inputted and set it to the property above
@@ -110,7 +114,7 @@ namespace SuperCalc
 
         //TODO: +/- button functionality
 
-        //TODO: Allow the user to perform multiple operations without having to press the ewuals button first
+        //TODO: Allow the user to perform multiple operations without having to press the equals button first
         //      (Operations are only currently between 2 number sets at a time)
 
         //TODO: Allow the user to perform the next calculation/operation without having to press the clear button beforehand               
