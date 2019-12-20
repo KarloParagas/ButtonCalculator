@@ -37,11 +37,11 @@ namespace SuperCalc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NumbersButton(object sender, EventArgs e)
+        private void NumbersButton_Click(object sender, EventArgs e)
         {
             Button btn = (Button)sender;
 
-            displayBox.Text += btn.Text;
+            displayBox.Text += btn.Text;            
         }
 
         /// <summary>
@@ -49,10 +49,8 @@ namespace SuperCalc
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OperatorButton(object sender, EventArgs e)
+        private void OperatorButton_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
-
             //Grab the operator that the user inputted and set it to the property above
             op = (sender as Button).Text;
 
@@ -109,5 +107,9 @@ namespace SuperCalc
 
             return result;
         }
+
+        //TODO: +/- button functionality
+        //TODO: Allow the user to perform multiple operations (Operations are only currently between 2 number sets)
+        //TODO: Allow the user to perform the next calculation/operation without having to press the clear button beforehand               
     }
 }
