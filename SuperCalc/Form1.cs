@@ -52,9 +52,10 @@ namespace SuperCalc
 
             Button btn = (Button)sender;
 
+            //Displays what the user clicked to the display box
             displayBox.Text += btn.Text;
 
-            //Displays what the user inputted above the display box
+            //Displays what the user clicked above the display box
             label1.Text += btn.Text;
         }
 
@@ -95,8 +96,15 @@ namespace SuperCalc
                 }
                 else if (op == "1/X")
                 {
-                    double result = (double)1 / num;
-                    displayBox.Text = result.ToString();
+                    if (num == 0) 
+                    {
+                        displayBox.Text = "Cannot divide by zero";
+                    }
+                    else
+                    {                   
+                        double result = (double)1 / num;
+                        displayBox.Text = result.ToString();
+                    }
                 }
                 else
                 {
@@ -104,7 +112,7 @@ namespace SuperCalc
                     label1.Text += " " + op + " ";
 
                     displayBox.Text = "";
-                }           
+                }                           
             }
         }
 
@@ -127,10 +135,7 @@ namespace SuperCalc
                 }
                 else 
                 {
-                    double result = PerformCalculation();
-
-                    //Display the result in the display box
-                    displayBox.Text = result.ToString();                          
+                    PerformCalculation();
                 }
             }
         }
@@ -144,7 +149,7 @@ namespace SuperCalc
             return true;
         }
 
-        private double PerformCalculation()
+        private void PerformCalculation()
         {
             double result = 0;
 
@@ -165,7 +170,8 @@ namespace SuperCalc
                 result = (double)num + num2;
             }
 
-            return result;
+            //Display the result in the display box
+            displayBox.Text = result.ToString();
         }
 
         //TODO: Allow the user to perform multiple operations without having to press the equals button first
