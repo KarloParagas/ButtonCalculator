@@ -19,6 +19,9 @@ namespace SuperCalc
 
         //Properties
         public double num { get; set; }
+
+        public double num2 { get; set; }
+
         public string op { get; set; }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -82,11 +85,13 @@ namespace SuperCalc
                 //Grab the operator that the user inputted and set it to the property above
                 op = (sender as Button).Text;
 
-                //Display it on the label
-                label1.Text += " " + op + " ";
-
                 //Grab the first set of numbers that the user inputted and set it to the property above
                 num = Convert.ToDouble(displayBox.Text);
+
+                //if (num != null) 
+                //{
+                //    num2 = Convert.ToDouble(displayBox.Text);
+                //}
 
                 if (op == "sqrt")
                 {
@@ -100,6 +105,9 @@ namespace SuperCalc
                 }
                 else
                 {
+                    //Display it on the label
+                    label1.Text += " " + op + " ";
+
                     displayBox.Text = "";
                 }           
             }
@@ -115,12 +123,20 @@ namespace SuperCalc
             if (IsPresent() == true) 
             {
                 //Grab the second set of numbers that the user inputted and set it to the property above
-                double num2 = Convert.ToDouble(displayBox.Text);
+                num2 = Convert.ToDouble(displayBox.Text);
 
-                double result = PerformCalculation(num2);
+                //If user tries to divide by zero
+                if (op == "/" && num2 == 0)
+                {
+                    displayBox.Text = "Cannot divide by zero";
+                }
+                else 
+                {
+                    double result = PerformCalculation();
 
-                //Display the result in the display box
-                displayBox.Text = result.ToString();           
+                    //Display the result in the display box
+                    displayBox.Text = result.ToString();                          
+                }
             }
         }
 
@@ -133,7 +149,7 @@ namespace SuperCalc
             return true;
         }
 
-        private double PerformCalculation(double num2)
+        private double PerformCalculation()
         {
             double result = 0;
 
@@ -158,6 +174,6 @@ namespace SuperCalc
         }
 
         //TODO: Allow the user to perform multiple operations without having to press the equals button first
-        //      (Operations are only currently between 2 number sets at a time)            
+        //      or the clear button to do another calculation (Operations are only currently between 2 number sets at a time)            
     }
 }
