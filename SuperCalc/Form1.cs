@@ -34,6 +34,7 @@ namespace SuperCalc
         private void ClearButton_Click(object sender, EventArgs e)
         {
             displayBox.Text = "";
+            label1.Text = "";
             decimalButton.Enabled = false;
         }
 
@@ -48,7 +49,10 @@ namespace SuperCalc
 
             Button btn = (Button)sender;
 
-            displayBox.Text += btn.Text;            
+            displayBox.Text += btn.Text;
+
+            //Displays what the user inputted above the display box
+            label1.Text += btn.Text;
         }
 
         private void posNegButton_Click(object sender, EventArgs e)
@@ -57,10 +61,12 @@ namespace SuperCalc
             if (displayBox.Text.Contains("-"))
             {
                 displayBox.Text = displayBox.Text.Remove(0, 1);
+                label1.Text = label1.Text.Remove(0, 1);
             }
             else //If not, add one
             {
                 displayBox.Text = "-" + displayBox.Text;
+                label1.Text = "-" + label1.Text;
             }
         }
 
@@ -75,6 +81,9 @@ namespace SuperCalc
             {
                 //Grab the operator that the user inputted and set it to the property above
                 op = (sender as Button).Text;
+
+                //Display it on the label
+                label1.Text += " " + op + " ";
 
                 //Grab the first set of numbers that the user inputted and set it to the property above
                 num = Convert.ToDouble(displayBox.Text);
