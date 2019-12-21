@@ -21,6 +21,11 @@ namespace SuperCalc
         public double num { get; set; }
         public string op { get; set; }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            decimalButton.Enabled = false;
+        }
+
         /// <summary>
         /// Clears the display box when user clicks the "Clear" button
         /// </summary>
@@ -29,6 +34,7 @@ namespace SuperCalc
         private void ClearButton_Click(object sender, EventArgs e)
         {
             displayBox.Text = "";
+            decimalButton.Enabled = false;
         }
 
         /// <summary>
@@ -38,9 +44,24 @@ namespace SuperCalc
         /// <param name="e"></param>
         private void NumbersButton_Click(object sender, EventArgs e)
         {
+            decimalButton.Enabled = true;
+
             Button btn = (Button)sender;
 
             displayBox.Text += btn.Text;            
+        }
+
+        private void posNegButton_Click(object sender, EventArgs e)
+        {
+            //If user already has a negative, remove it
+            if (displayBox.Text.Contains("-"))
+            {
+                displayBox.Text = displayBox.Text.Remove(0, 1);
+            }
+            else //If not, add one
+            {
+                displayBox.Text = "-" + displayBox.Text;
+            }
         }
 
         /// <summary>
@@ -50,25 +71,28 @@ namespace SuperCalc
         /// <param name="e"></param>
         private void OperatorButton_Click(object sender, EventArgs e)
         {
-            //Grab the operator that the user inputted and set it to the property above
-            op = (sender as Button).Text;
+            if (IsPresent() == true) 
+            {
+                //Grab the operator that the user inputted and set it to the property above
+                op = (sender as Button).Text;
 
-            //Grab the first set of numbers that the user inputted and set it to the property above
-            num = Convert.ToDouble(displayBox.Text);
+                //Grab the first set of numbers that the user inputted and set it to the property above
+                num = Convert.ToDouble(displayBox.Text);
 
-            if (op == "sqrt")
-            {
-                double result = Math.Sqrt(num);
-                displayBox.Text = result.ToString();
-            }
-            else if (op == "1/X") 
-            {
-                double result = (double) 1 / num;
-                displayBox.Text = result.ToString();
-            }
-            else
-            {
-                displayBox.Text = "";
+                if (op == "sqrt")
+                {
+                    double result = Math.Sqrt(num);
+                    displayBox.Text = result.ToString();
+                }
+                else if (op == "1/X")
+                {
+                    double result = (double)1 / num;
+                    displayBox.Text = result.ToString();
+                }
+                else
+                {
+                    displayBox.Text = "";
+                }           
             }
         }
 
@@ -79,13 +103,25 @@ namespace SuperCalc
         /// <param name="e"></param>
         private void EqualsButton_Click(object sender, EventArgs e)
         {
-            //Grab the second set of numbers that the user inputted and set it to the property above
-            double num2 = Convert.ToDouble(displayBox.Text);
+            if (IsPresent() == true) 
+            {
+                //Grab the second set of numbers that the user inputted and set it to the property above
+                double num2 = Convert.ToDouble(displayBox.Text);
 
-            double result = PerformCalculation(num2);
+                double result = PerformCalculation(num2);
 
-            //Display the result in the display box
-            displayBox.Text = result.ToString();
+                //Display the result in the display box
+                displayBox.Text = result.ToString();           
+            }
+        }
+
+        private bool IsPresent()
+        {
+            if (displayBox.Text == "" || displayBox.Text == "-") 
+            {
+                return false;
+            }
+            return true;
         }
 
         private double PerformCalculation(double num2)
@@ -111,9 +147,6 @@ namespace SuperCalc
 
             return result;
         }
-
-        //TODO: +/- button functionality
-
         //TODO: Allow the user to perform multiple operations without having to press the equals button first
         //      (Operations are only currently between 2 number sets at a time)
 

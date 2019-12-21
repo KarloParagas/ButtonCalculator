@@ -262,6 +262,7 @@
             this.posNegButton.TabIndex = 21;
             this.posNegButton.Text = "+/-";
             this.posNegButton.UseVisualStyleBackColor = true;
+            this.posNegButton.Click += new System.EventHandler(this.posNegButton_Click);
             // 
             // decimalButton
             // 
@@ -314,6 +315,7 @@
             this.Controls.Add(this.displayBox);
             this.Name = "Form1";
             this.Text = "Super Calculator";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }
