@@ -88,11 +88,6 @@ namespace SuperCalc
                 //Grab the first set of numbers that the user inputted and set it to the property above
                 num = Convert.ToDouble(displayBox.Text);
 
-                //if (num != null) 
-                //{
-                //    num2 = Convert.ToDouble(displayBox.Text);
-                //}
-
                 if (op == "sqrt")
                 {
                     double result = Math.Sqrt(num);
