@@ -147,9 +147,8 @@ namespace SuperCalc
 
             return result;
         }
-        //TODO: Allow the user to perform multiple operations without having to press the equals button first
-        //      (Operations are only currently between 2 number sets at a time)
 
-        //TODO: Allow the user to perform the next calculation/operation without having to press the clear button beforehand               
+        //TODO: Allow the user to perform multiple operations without having to press the equals button first
+        //      (Operations are only currently between 2 number sets at a time)            
     }
 }
