@@ -1,2 +1,2 @@
 # SuperCalculator
-A basic button calculator that performs basic calculations.
+A button calculator that performs simple calculations.
