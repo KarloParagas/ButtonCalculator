@@ -52,6 +52,13 @@ namespace SuperCalc
 
             Button btn = (Button)sender;
 
+            //If the display box has "Cannot divide by zero", clear it
+            if (displayBox.Text == "Cannot divide by zero") 
+            {
+                displayBox.Text = "";
+                label1.Text = "";
+            }
+
             //Displays what the user clicked to the display box
             displayBox.Text += btn.Text;
 
@@ -73,6 +80,15 @@ namespace SuperCalc
                 label1.Text = "-" + label1.Text;
             }
         }
+        private void decimalButton_Click(object sender, EventArgs e)
+        {
+            //If the display box doesn't have a decimal
+            if (!displayBox.Text.Contains(".")) 
+            {
+                displayBox.Text += ".";
+                label1.Text += ".";
+            }
+        }
 
         /// <summary>
         /// Grabs then clears the first set of operand when an operator is clicked.
@@ -81,7 +97,7 @@ namespace SuperCalc
         /// <param name="e"></param>
         private void OperatorButton_Click(object sender, EventArgs e)
         {
-            if (IsPresent() == true) 
+            if (IsDataValid() == true) 
             {
                 //Grab the operator that the user inputted and set it to the property above
                 op = (sender as Button).Text;
@@ -91,19 +107,19 @@ namespace SuperCalc
 
                 if (op == "sqrt")
                 {
-                    double result = Math.Sqrt(num);
-                    displayBox.Text = result.ToString();
+                    double total = PerformCalculation();
+                    displayBox.Text = total.ToString();
                 }
                 else if (op == "1/X")
                 {
-                    if (num == 0) 
+                    if (num == 0)
                     {
                         displayBox.Text = "Cannot divide by zero";
                     }
-                    else
-                    {                   
-                        double result = (double)1 / num;
-                        displayBox.Text = result.ToString();
+                    else 
+                    {
+                        double total = PerformCalculation();
+                        displayBox.Text = total.ToString();
                     }
                 }
                 else
@@ -123,7 +139,7 @@ namespace SuperCalc
         /// <param name="e"></param>
         private void EqualsButton_Click(object sender, EventArgs e)
         {
-            if (IsPresent() == true) 
+            if (IsDataValid() == true && op != "sqrt" && op != "1/X") 
             {
                 //Grab the second set of numbers that the user inputted and set it to the property above
                 num2 = Convert.ToDouble(displayBox.Text);
@@ -135,43 +151,59 @@ namespace SuperCalc
                 }
                 else 
                 {
-                    PerformCalculation();
+                    double total = PerformCalculation();
+
+                    //Display the result in the display box
+                    displayBox.Text = total.ToString();
+
+                    decimalButton.Enabled = false;
                 }
             }
         }
 
-        private bool IsPresent()
+        private bool IsDataValid()
         {
-            if (displayBox.Text == "" || displayBox.Text == "-") 
+            if (displayBox.Text == "" || displayBox.Text == "-" || displayBox.Text == "Cannot divide by zero" 
+             || displayBox.Text == "." || displayBox.Text == "NaN") 
             {
                 return false;
             }
             return true;
         }
 
-        private void PerformCalculation()
+        private double PerformCalculation()
         {
-            double result = 0;
+            double total = 0;
 
             if (op == "/") 
             {
-                result = (double)num / num2;
+                total = (double)num / num2;
             }
             if (op == "*")
             {
-                result = (double)num * num2;
+                total = (double)num * num2;
             }
             if (op == "-")
             {
-                result = (double)num - num2;
+                total = (double)num - num2;
             }
             if (op == "+")
             {
-                result = (double)num + num2;
+                total = (double)num + num2;
+            }
+            if (op == "sqrt") 
+            {
+                total = Math.Sqrt(num);
+            }
+            if (op == "1/X") 
+            {
+                total = (double)1 / num;
             }
 
-            //Display the result in the display box
-            displayBox.Text = result.ToString();
+            //Set the total to the num property
+            num = total;
+
+            return total; 
         }
 
         //TODO: Allow the user to perform multiple operations without having to press the equals button first
