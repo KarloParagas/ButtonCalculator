@@ -59,7 +59,7 @@ namespace SuperCalc
 
             //If the display box has "Cannot divide by zero", clear it
             if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" 
-             || IsOperatorBtnClicked || IsEqualsBtnClicked == false) 
+             || IsOperatorBtnClicked || IsEqualsBtnClicked == true) 
             {
                 displayBox.Text = "";
             }
@@ -82,20 +82,11 @@ namespace SuperCalc
                 displayBox.Text = displayBox.Text.Remove(0, 1);
                 label1.Text = label1.Text.Remove(0, 1);
             }
-            else if (IsEqualsBtnClicked == true)
+            else if(displayBox.Text != "Cannot divide by zero")
             {
-                displayBox.Text = "-" + num.ToString();
-                label1.Text = "-" + num.ToString();
-            }
-            else
-            {
-                if (displayBox.Text != "Cannot divide by zero")
-                {
-                    displayBox.Text = "";
-                    displayBox.Text += "-";
+                    displayBox.Text = "-";
 
                     label1.Text += "-";
-                }
             }
         }
 
@@ -230,8 +221,6 @@ namespace SuperCalc
 
                     //Display the result in the display box, and the label display above
                     displayBox.Text = total.ToString();
-
-                    //label1.Text = total.ToString();
 
                     //Set num variable to the total
                     num = Convert.ToDouble(displayBox.Text);
