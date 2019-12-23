@@ -18,6 +18,7 @@ namespace SuperCalc
         }
 
         //TODO: +/- functionality needs adjusting. Must be able to do things such as: 1 + 1 + -2 
+        //TODO: If, for example, 1 + 1 is done using an equals button click, the user should be able to spam the equals button and it should only keep adding 1 to the total
 
         public string op { get; set; }
 
@@ -57,7 +58,8 @@ namespace SuperCalc
             decimalButton.Enabled = true;
 
             //If the display box has "Cannot divide by zero", clear it
-            if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" || IsOperatorBtnClicked || IsEqualsBtnClicked) 
+            if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" 
+             || IsOperatorBtnClicked || IsEqualsBtnClicked == false) 
             {
                 displayBox.Text = "";
             }
@@ -89,8 +91,10 @@ namespace SuperCalc
             {
                 if (displayBox.Text != "Cannot divide by zero")
                 {
-                    displayBox.Text = "-" + displayBox.Text;
-                    label1.Text = "-" + label1.Text;
+                    displayBox.Text = "";
+                    displayBox.Text += "-";
+
+                    label1.Text += "-";
                 }
             }
         }
