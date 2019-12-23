@@ -17,12 +17,15 @@ namespace SuperCalc
             InitializeComponent();
         }
 
-        //Properties
-        public double num { get; set; }
-
-        public double num2 { get; set; }
+        //TODO: +/- functionality needs adjusting. Must be able to do things such as: 1 + 1 + -2 
 
         public string op { get; set; }
+
+        public double num = 0;
+
+        bool IsOperatorBtnClicked = false;
+
+        bool IsEqualsBtnClicked = false;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -36,9 +39,12 @@ namespace SuperCalc
         /// <param name="e"></param>
         private void ClearButton_Click(object sender, EventArgs e)
         {
-            displayBox.Text = "";
+            num = 0;
+            displayBox.Text = "0";
             label1.Text = "";
             decimalButton.Enabled = false;
+            IsOperatorBtnClicked = false;
+            IsEqualsBtnClicked = false;
         }
 
         /// <summary>
@@ -50,20 +56,20 @@ namespace SuperCalc
         {
             decimalButton.Enabled = true;
 
-            Button btn = (Button)sender;
-
             //If the display box has "Cannot divide by zero", clear it
-            if (displayBox.Text == "Cannot divide by zero") 
+            if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" || IsOperatorBtnClicked || IsEqualsBtnClicked) 
             {
                 displayBox.Text = "";
-                label1.Text = "";
             }
 
+            IsOperatorBtnClicked = false;
+            IsEqualsBtnClicked = false;
+
             //Displays what the user clicked to the display box
-            displayBox.Text += btn.Text;
+            displayBox.Text += (sender as Button).Text;
 
             //Displays what the user clicked above the display box
-            label1.Text += btn.Text;
+            label1.Text += (sender as Button).Text;
         }
 
         private void posNegButton_Click(object sender, EventArgs e)
@@ -74,19 +80,31 @@ namespace SuperCalc
                 displayBox.Text = displayBox.Text.Remove(0, 1);
                 label1.Text = label1.Text.Remove(0, 1);
             }
-            else //If not, add one
+            else if (IsEqualsBtnClicked == true)
             {
-                displayBox.Text = "-" + displayBox.Text;
-                label1.Text = "-" + label1.Text;
+                displayBox.Text = "-" + num.ToString();
+                label1.Text = "-" + num.ToString();
+            }
+            else
+            {
+                if (displayBox.Text != "Cannot divide by zero")
+                {
+                    displayBox.Text = "-" + displayBox.Text;
+                    label1.Text = "-" + label1.Text;
+                }
             }
         }
+
         private void decimalButton_Click(object sender, EventArgs e)
         {
             //If the display box doesn't have a decimal
             if (!displayBox.Text.Contains(".")) 
             {
-                displayBox.Text += ".";
-                label1.Text += ".";
+                if (displayBox.Text != "Cannot divide by zero") 
+                {
+                    displayBox.Text += ".";
+                    label1.Text += ".";              
+                }
             }
         }
 
@@ -99,36 +117,92 @@ namespace SuperCalc
         {
             if (IsDataValid() == true) 
             {
-                //Grab the operator that the user inputted and set it to the property above
-                op = (sender as Button).Text;
-
-                //Grab the first set of numbers that the user inputted and set it to the property above
-                num = Convert.ToDouble(displayBox.Text);
-
-                if (op == "sqrt")
+                if (num != 0 && IsEqualsBtnClicked == false)
                 {
-                    double total = PerformCalculation();
-                    displayBox.Text = total.ToString();
-                }
-                else if (op == "1/X")
-                {
-                    if (num == 0)
-                    {
-                        displayBox.Text = "Cannot divide by zero";
-                    }
-                    else 
+                    equalsButton.PerformClick();
+
+                    op = (sender as Button).Text;
+
+                    if (op == "sqrt")
                     {
                         double total = PerformCalculation();
                         displayBox.Text = total.ToString();
-                    }
-                }
-                else
-                {
-                    //Display it on the label
-                    label1.Text += " " + op + " ";
 
-                    displayBox.Text = "";
-                }                           
+                        //Set num variable to the total
+                        num = Convert.ToDouble(displayBox.Text);
+
+                        label1.Text += " " + op;
+                    }
+                    else if (op == "1/X")
+                    {
+                        if (num == 0)
+                        {
+                            displayBox.Text = "Cannot divide by zero";
+                        }
+                        else
+                        {
+                            double total = PerformCalculation();
+                            displayBox.Text = total.ToString();
+
+                            //Set num variable to the total
+                            num = Convert.ToDouble(displayBox.Text);
+
+                            label1.Text += " " + op;
+                        }
+                    }
+                    else 
+                    {
+                        label1.Text += " " + op + " ";                   
+                    }
+
+                    IsOperatorBtnClicked = true;
+                }
+                else 
+                {
+                    //Grab the operator that the user inputted and set it to the property above
+                    op = (sender as Button).Text;
+
+                    //Grab the first set of numbers that the user inputted and set it to the property above
+                    num = Convert.ToDouble(displayBox.Text);
+
+                    if (op == "sqrt")
+                    {
+                        double total = PerformCalculation();
+                        displayBox.Text = total.ToString();
+
+                        //Set num variable to the total
+                        num = Convert.ToDouble(displayBox.Text);
+
+                        label1.Text += " " + op;
+                    }
+                    else if (op == "1/X")
+                    {
+                        if (num == 0)
+                        {
+                            displayBox.Text = "Cannot divide by zero";
+                        }
+                        else
+                        {
+                            double total = PerformCalculation();
+                            displayBox.Text = total.ToString();
+
+                            //Set num variable to the total
+                            num = Convert.ToDouble(displayBox.Text);
+
+                            label1.Text += " " + op;
+                        }
+                    }
+                    else
+                    {
+                        //Display it on the label
+                        label1.Text += " " + op + " ";
+
+                        //Clear the display box for the second set of numbers could be entered
+                        displayBox.Text = "";
+                    }
+
+                    IsOperatorBtnClicked = true;
+                }
             }
         }
 
@@ -141,11 +215,8 @@ namespace SuperCalc
         {
             if (IsDataValid() == true && op != "sqrt" && op != "1/X") 
             {
-                //Grab the second set of numbers that the user inputted and set it to the property above
-                num2 = Convert.ToDouble(displayBox.Text);
-
                 //If user tries to divide by zero
-                if (op == "/" && num2 == 0)
+                if (op == "/" && Convert.ToDouble(displayBox.Text) == 0)
                 {
                     displayBox.Text = "Cannot divide by zero";
                 }
@@ -153,12 +224,19 @@ namespace SuperCalc
                 {
                     double total = PerformCalculation();
 
-                    //Display the result in the display box
+                    //Display the result in the display box, and the label display above
                     displayBox.Text = total.ToString();
+
+                    //label1.Text = total.ToString();
+
+                    //Set num variable to the total
+                    num = Convert.ToDouble(displayBox.Text);
 
                     decimalButton.Enabled = false;
                 }
             }
+
+            IsEqualsBtnClicked = true;
         }
 
         private bool IsDataValid()
@@ -177,19 +255,19 @@ namespace SuperCalc
 
             if (op == "/") 
             {
-                total = (double)num / num2;
+                total = (double)num / Convert.ToDouble(displayBox.Text);
             }
             if (op == "*")
             {
-                total = (double)num * num2;
+                total = (double)num * Convert.ToDouble(displayBox.Text);
             }
             if (op == "-")
             {
-                total = (double)num - num2;
+                total = (double)num - Convert.ToDouble(displayBox.Text);
             }
             if (op == "+")
             {
-                total = (double)num + num2;
+                total = (double)num + Convert.ToDouble(displayBox.Text);
             }
             if (op == "sqrt") 
             {
@@ -200,13 +278,7 @@ namespace SuperCalc
                 total = (double)1 / num;
             }
 
-            //Set the total to the num property
-            num = total;
-
             return total; 
-        }
-
-        //TODO: Allow the user to perform multiple operations without having to press the equals button first
-        //      or the clear button to do another calculation (Operations are only currently between 2 number sets at a time)            
+        }  
     }
 }

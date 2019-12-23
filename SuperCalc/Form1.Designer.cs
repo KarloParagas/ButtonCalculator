@@ -60,6 +60,8 @@
             this.displayBox.Name = "displayBox";
             this.displayBox.Size = new System.Drawing.Size(365, 33);
             this.displayBox.TabIndex = 0;
+            this.displayBox.Text = "0";
+            this.displayBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // clearButton
             // 
@@ -213,7 +215,7 @@
             this.threeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.threeButton.Location = new System.Drawing.Point(158, 310);
             this.threeButton.Name = "threeButton";
-            this.threeButton.Size = new System.Drawing.Size(54, 49);
+            this.threeButton.Size = new System.Drawing.Size(58, 49);
             this.threeButton.TabIndex = 17;
             this.threeButton.Text = "3";
             this.threeButton.UseVisualStyleBackColor = true;
@@ -270,7 +272,7 @@
             this.decimalButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.decimalButton.Location = new System.Drawing.Point(158, 380);
             this.decimalButton.Name = "decimalButton";
-            this.decimalButton.Size = new System.Drawing.Size(54, 49);
+            this.decimalButton.Size = new System.Drawing.Size(58, 49);
             this.decimalButton.TabIndex = 22;
             this.decimalButton.Text = ".";
             this.decimalButton.UseVisualStyleBackColor = true;
@@ -325,7 +327,7 @@
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.displayBox);
             this.Name = "Form1";
-            this.Text = "Super Calculator";
+            this.Text = " Calculator";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
