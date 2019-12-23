@@ -1,2 +1,2 @@
 # Button Calculator
-A button calculator that performs simple calculations.
+A calculator that performs simple calculations.
