@@ -125,7 +125,8 @@ namespace SuperCalc
                 {
                     clearButton.PerformClick();
                 }
-                else if (num != 0 && IsEqualsBtnClicked == false) //NOTE (Needs fixing): If an answer is zero even though youre doing multiple operations consecutively, it won't trigger on the next one
+
+                if (num != 0 && IsEqualsBtnClicked == false)
                 {
                     label1.Text += " " + displayBox.Text + " " + (sender as Button).Text;
 
@@ -156,9 +157,6 @@ namespace SuperCalc
                     {                   
                         displayBox.Text = total.ToString();
 
-                        //Set num variable to the total
-                        num = Convert.ToDouble(displayBox.Text);
-
                         //Grab the operator that the user inputted and set it to the property above
                         op = (sender as Button).Text;
 
@@ -180,9 +178,6 @@ namespace SuperCalc
 
                         double total = PerformCalculation();
                         displayBox.Text = total.ToString();
-
-                        //Set num variable to the total
-                        num = Convert.ToDouble(displayBox.Text);
                     }
                     else if (op == "1/X")
                     {
@@ -196,9 +191,6 @@ namespace SuperCalc
 
                             double total = PerformCalculation();
                             displayBox.Text = total.ToString();
-
-                            //Set num variable to the total
-                            num = Convert.ToDouble(displayBox.Text);
                         }
                     }
                     else
@@ -239,9 +231,6 @@ namespace SuperCalc
 
                         //Display the result in the display box
                         displayBox.Text = total.ToString();
-
-                        //Set num variable to the total
-                        num = Convert.ToDouble(displayBox.Text);
 
                         decimalButton.Enabled = false;
                     }               
@@ -289,6 +278,9 @@ namespace SuperCalc
             {
                 total = (double)1 / num;
             }
+
+            //Set the total to num, so the user can perform another operation with it. If needed.
+            num = total;
 
             return total; 
         }  
