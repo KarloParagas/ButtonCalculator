@@ -17,7 +17,7 @@ namespace SuperCalc
             InitializeComponent();
         }
 
-        //TODO: If, for example, 10 / 0 is done without using an equals button and user tries to do another operation, users shouldn't be able to do so.
+        //Need to fix: If, for example, user does 10 + and the next number is a negative, if user clicks the negative first then enters the number, it clears the negative.
         //TODO: If, for example, user does 1 + 2 + 3 + 4 and tries to click the "sqrt" or "1/X" next, it doesn't perform the calculation
 
         public string op { get; set; }
@@ -134,16 +134,25 @@ namespace SuperCalc
                     }
 
                     double total = PerformCalculation();
-                    displayBox.Text = total.ToString();
 
-                    //Set num variable to the total
-                    num = Convert.ToDouble(displayBox.Text);
+                    if (total.ToString() == "∞")
+                    {
+                        MessageBox.Show("Cannot do anything with infinity");
+                        clearButton.PerformClick();
+                    }
+                    else 
+                    {                   
+                        displayBox.Text = total.ToString();
 
-                    //Grab the operator that the user inputted and set it to the property above
-                    op = (sender as Button).Text;
+                        //Set num variable to the total
+                        num = Convert.ToDouble(displayBox.Text);
 
-                    decimalButton.Enabled = false;
-                    IsOperatorBtnClicked = true;
+                        //Grab the operator that the user inputted and set it to the property above
+                        op = (sender as Button).Text;
+
+                        decimalButton.Enabled = false;
+                        IsOperatorBtnClicked = true;
+                    }
                 }
                 else 
                 {
