@@ -17,7 +17,6 @@ namespace SuperCalc
             InitializeComponent();
         }
 
-        //Need to fix: If, for example, user does 10 + and the next number is a negative, if user clicks the negative first then enters the number, it clears the negative.
         //TODO: If, for example, user does 1 + 2 + 3 + 4 and tries to click the "sqrt" or "1/X" next, it doesn't perform the calculation
 
         public string op { get; set; }
@@ -57,13 +56,22 @@ namespace SuperCalc
         {
             decimalButton.Enabled = true;
 
+            if (IsEqualsBtnClicked == true) 
+            {
+                displayBox.Text = "";
+                label1.Text = "";
+                num = 0;
+                decimalButton.Enabled = false;
+                IsOperatorBtnClicked = false;
+                IsEqualsBtnClicked = false;
+            }
+
             if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" || IsOperatorBtnClicked) 
             {
-                if (IsEqualsBtnClicked == true) 
+                if (displayBox.Text != "-") 
                 {
-                    label1.Text = "";
+                    displayBox.Text = "";              
                 }
-                displayBox.Text = "";
             }
 
             IsOperatorBtnClicked = false;
@@ -75,7 +83,7 @@ namespace SuperCalc
 
         private void posNegButton_Click(object sender, EventArgs e)
         {
-            if (displayBox.Text == "0") 
+            if (displayBox.Text == "0" || displayBox.Text != "") 
             {
                 displayBox.Text = "";
             }
@@ -113,7 +121,11 @@ namespace SuperCalc
         {
             if (IsDataValid() == true) 
             {
-                if (num != 0 && IsEqualsBtnClicked == false) //NOTE (Needs fixing): If an answer is zero even though youre doing multiple operations consecutively, it won't trigger on the next one
+                if (num == 0 && IsEqualsBtnClicked == true) 
+                {
+                    clearButton.PerformClick();
+                }
+                else if (num != 0 && IsEqualsBtnClicked == false) //NOTE (Needs fixing): If an answer is zero even though youre doing multiple operations consecutively, it won't trigger on the next one
                 {
                     label1.Text += " " + displayBox.Text + " " + (sender as Button).Text;
 
