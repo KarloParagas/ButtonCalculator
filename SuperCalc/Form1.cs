@@ -17,8 +17,6 @@ namespace SuperCalc
             InitializeComponent();
         }
 
-        //TODO: If, for example, user does 1 + 2 + 3 + 4 and tries to click the "sqrt" or "1/X" next, it doesn't perform the calculation
-
         public string op { get; set; }
 
         public double num = 0;
@@ -58,12 +56,11 @@ namespace SuperCalc
 
             if (IsEqualsBtnClicked == true) 
             {
-                displayBox.Text = "";
-                label1.Text = "";
-                num = 0;
-                decimalButton.Enabled = false;
-                IsOperatorBtnClicked = false;
                 IsEqualsBtnClicked = false;
+
+                displayBox.Text = "";
+
+                label1.Text = num + " " + op;
             }
 
             if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" || IsOperatorBtnClicked) 
@@ -153,8 +150,8 @@ namespace SuperCalc
                         MessageBox.Show("Cannot do anything with infinity");
                         clearButton.PerformClick();
                     }
-                    else 
-                    {                   
+                    else
+                    {
                         displayBox.Text = total.ToString();
 
                         //Grab the operator that the user inputted and set it to the property above
@@ -164,7 +161,7 @@ namespace SuperCalc
                         IsOperatorBtnClicked = true;
                     }
                 }
-                else 
+                else if (IsEqualsBtnClicked == false) 
                 {
                     //Grab the operator that the user inputted and set it to the property above
                     op = (sender as Button).Text;
@@ -203,6 +200,10 @@ namespace SuperCalc
                     }
 
                     IsOperatorBtnClicked = true;
+                }
+                else // If IsEqualsBtnClicked == true
+                {
+                    op = (sender as Button).Text;
                 }
             }
         }
