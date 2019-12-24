@@ -17,8 +17,8 @@ namespace SuperCalc
             InitializeComponent();
         }
 
-        //TODO: +/- functionality needs adjusting. Must be able to do things such as: 1 + 1 + -2 
-        //TODO: If, for example, 1 + 1 is done using an equals button click, the user should be able to spam the equals button and it should only keep adding 1 to the total
+        //TODO: If, for example, 10 / 0 is done without using an equals button and user tries to do another operation, users shouldn't be able to do so.
+        //TODO: If, for example, user does 1 + 2 + 3 + 4 and tries to click the "sqrt" or "1/X" next, it doesn't perform the calculation
 
         public string op { get; set; }
 
@@ -57,10 +57,12 @@ namespace SuperCalc
         {
             decimalButton.Enabled = true;
 
-            //If the display box has "Cannot divide by zero", clear it
-            if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" 
-             || IsOperatorBtnClicked || IsEqualsBtnClicked == true) 
+            if (displayBox.Text == "Cannot divide by zero" || displayBox.Text == "NaN" || displayBox.Text == "0" || IsOperatorBtnClicked) 
             {
+                if (IsEqualsBtnClicked == true) 
+                {
+                    label1.Text = "";
+                }
                 displayBox.Text = "";
             }
 
@@ -69,30 +71,29 @@ namespace SuperCalc
 
             //Displays what the user clicked to the display box
             displayBox.Text += (sender as Button).Text;
-
-            //Displays what the user clicked above the display box
-            label1.Text += (sender as Button).Text;
         }
 
         private void posNegButton_Click(object sender, EventArgs e)
         {
-            //If user already has a negative, remove it
+            if (displayBox.Text == "0") 
+            {
+                displayBox.Text = "";
+            }
+
+            //If the display box already has a negative button, remove it
             if (displayBox.Text.Contains("-"))
             {
                 displayBox.Text = displayBox.Text.Remove(0, 1);
-                label1.Text = label1.Text.Remove(0, 1);
             }
-            else if(displayBox.Text != "Cannot divide by zero")
+            else if (displayBox.Text != "Cannot divide by zero")
             {
-                    displayBox.Text = "-";
-
-                    label1.Text += "-";
+                displayBox.Text = "-" + displayBox.Text;
             }
         }
 
         private void decimalButton_Click(object sender, EventArgs e)
         {
-            //If the display box doesn't have a decimal
+            //If the display box doesn't have a decimal, add it
             if (!displayBox.Text.Contains(".")) 
             {
                 if (displayBox.Text != "Cannot divide by zero") 
@@ -112,21 +113,13 @@ namespace SuperCalc
         {
             if (IsDataValid() == true) 
             {
-                if (num != 0 && IsEqualsBtnClicked == false)
+                if (num != 0 && IsEqualsBtnClicked == false) //NOTE (Needs fixing): If an answer is zero even though youre doing multiple operations consecutively, it won't trigger on the next one
                 {
-                    equalsButton.PerformClick();
-
-                    op = (sender as Button).Text;
+                    label1.Text += " " + displayBox.Text + " " + (sender as Button).Text;
 
                     if (op == "sqrt")
                     {
-                        double total = PerformCalculation();
-                        displayBox.Text = total.ToString();
-
-                        //Set num variable to the total
-                        num = Convert.ToDouble(displayBox.Text);
-
-                        label1.Text += " " + op;
+                        label1.Text = "Square Root of " + displayBox.Text;
                     }
                     else if (op == "1/X")
                     {
@@ -136,20 +129,20 @@ namespace SuperCalc
                         }
                         else
                         {
-                            double total = PerformCalculation();
-                            displayBox.Text = total.ToString();
-
-                            //Set num variable to the total
-                            num = Convert.ToDouble(displayBox.Text);
-
-                            label1.Text += " " + op;
+                            label1.Text = "1/(" + displayBox.Text + ")";
                         }
                     }
-                    else 
-                    {
-                        label1.Text += " " + op + " ";                   
-                    }
 
+                    double total = PerformCalculation();
+                    displayBox.Text = total.ToString();
+
+                    //Set num variable to the total
+                    num = Convert.ToDouble(displayBox.Text);
+
+                    //Grab the operator that the user inputted and set it to the property above
+                    op = (sender as Button).Text;
+
+                    decimalButton.Enabled = false;
                     IsOperatorBtnClicked = true;
                 }
                 else 
@@ -162,13 +155,13 @@ namespace SuperCalc
 
                     if (op == "sqrt")
                     {
+                        label1.Text = "Square Root of " + displayBox.Text;
+
                         double total = PerformCalculation();
                         displayBox.Text = total.ToString();
 
                         //Set num variable to the total
                         num = Convert.ToDouble(displayBox.Text);
-
-                        label1.Text += " " + op;
                     }
                     else if (op == "1/X")
                     {
@@ -178,19 +171,19 @@ namespace SuperCalc
                         }
                         else
                         {
+                            label1.Text = "1/(" + displayBox.Text + ")";
+
                             double total = PerformCalculation();
                             displayBox.Text = total.ToString();
 
                             //Set num variable to the total
                             num = Convert.ToDouble(displayBox.Text);
-
-                            label1.Text += " " + op;
                         }
                     }
                     else
                     {
                         //Display it on the label
-                        label1.Text += " " + op + " ";
+                        label1.Text += num + " " + (sender as Button).Text;
 
                         //Clear the display box for the second set of numbers could be entered
                         displayBox.Text = "";
@@ -210,22 +203,27 @@ namespace SuperCalc
         {
             if (IsDataValid() == true && op != "sqrt" && op != "1/X") 
             {
-                //If user tries to divide by zero
-                if (op == "/" && Convert.ToDouble(displayBox.Text) == 0)
+                if (IsEqualsBtnClicked == false) 
                 {
-                    displayBox.Text = "Cannot divide by zero";
-                }
-                else 
-                {
-                    double total = PerformCalculation();
+                    label1.Text += " " + displayBox.Text;
 
-                    //Display the result in the display box, and the label display above
-                    displayBox.Text = total.ToString();
+                    //If user tries to divide by zero
+                    if (op == "/" && Convert.ToDouble(displayBox.Text) == 0)
+                    {
+                        displayBox.Text = "Cannot divide by zero";
+                    }
+                    else 
+                    {
+                        double total = PerformCalculation();
 
-                    //Set num variable to the total
-                    num = Convert.ToDouble(displayBox.Text);
+                        //Display the result in the display box
+                        displayBox.Text = total.ToString();
 
-                    decimalButton.Enabled = false;
+                        //Set num variable to the total
+                        num = Convert.ToDouble(displayBox.Text);
+
+                        decimalButton.Enabled = false;
+                    }               
                 }
             }
 
