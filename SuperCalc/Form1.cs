@@ -25,6 +25,8 @@ namespace SuperCalc
 
         bool IsEqualsBtnClicked = false;
 
+        bool IsNumNegative = false;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             decimalButton.Enabled = false;
@@ -54,7 +56,7 @@ namespace SuperCalc
         {
             decimalButton.Enabled = true;
 
-            if (IsEqualsBtnClicked == true) 
+            if (IsEqualsBtnClicked == true && IsNumNegative == true && !displayBox.Text.Contains("-")) 
             {
                 IsEqualsBtnClicked = false;
 
@@ -74,25 +76,48 @@ namespace SuperCalc
             IsOperatorBtnClicked = false;
             IsEqualsBtnClicked = false;
 
+            //Checks if the whole number is positive or negative
+            if (displayBox.Text.Contains("-"))
+            {
+                IsNumNegative = true;
+            }
+            else 
+            {
+                IsNumNegative = false;           
+            }
+
             //Displays what the user clicked to the display box
             displayBox.Text += (sender as Button).Text;
         }
 
         private void posNegButton_Click(object sender, EventArgs e)
         {
-            if (displayBox.Text == "0" || displayBox.Text != "") 
+            if (displayBox.Text == "0" || IsEqualsBtnClicked == true)
+            {
+                displayBox.Text = "";
+            }
+            else if (displayBox.Text != "" && IsEqualsBtnClicked == true && IsNumNegative == false) 
             {
                 displayBox.Text = "";
             }
 
-            //If the display box already has a negative button, remove it
-            if (displayBox.Text.Contains("-"))
+            //Turns the whole number negative or positive
+            if (!displayBox.Text.Contains("-"))
+            {
+                if (displayBox.Text != "Cannot divide by zero")
+                {
+                    if (num != 0 && IsOperatorBtnClicked == true)
+                    {
+                        displayBox.Text = "";
+                    }
+                    displayBox.Text = "-" + displayBox.Text;
+                    IsNumNegative = true;
+                }
+            }
+            else 
             {
                 displayBox.Text = displayBox.Text.Remove(0, 1);
-            }
-            else if (displayBox.Text != "Cannot divide by zero")
-            {
-                displayBox.Text = "-" + displayBox.Text;
+                IsNumNegative = false;
             }
         }
 
@@ -103,14 +128,46 @@ namespace SuperCalc
             {
                 if (displayBox.Text != "Cannot divide by zero") 
                 {
-                    displayBox.Text += ".";
-                    label1.Text += ".";              
+                    displayBox.Text += ".";            
                 }
             }
         }
 
         /// <summary>
-        /// Grabs then clears the first set of operand when an operator is clicked.
+        /// Performs the necessary calculation between the two number inputs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EqualsButton_Click(object sender, EventArgs e)
+        {
+            if (IsDataValid() == true && op != "sqrt" && op != "1/X") 
+            {
+                if (IsEqualsBtnClicked == false) 
+                {
+                    label1.Text += " " + displayBox.Text;
+
+                    //If user tries to divide by zero
+                    if (op == "/" && Convert.ToDouble(displayBox.Text) == 0)
+                    {
+                        displayBox.Text = "Cannot divide by zero";
+                    }
+                    else 
+                    {
+                        double total = PerformCalculation();
+
+                        //Display the result in the display box
+                        displayBox.Text = total.ToString();
+
+                        decimalButton.Enabled = false;
+                    }               
+                }
+            }
+
+            IsEqualsBtnClicked = true;
+        }
+
+        /// <summary>
+        /// Applies the desired operation to the set of numbers inputted
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -118,9 +175,15 @@ namespace SuperCalc
         {
             if (IsDataValid() == true) 
             {
-                if (num == 0 && IsEqualsBtnClicked == true) 
+                if (num == 0 && IsEqualsBtnClicked == true)
                 {
                     clearButton.PerformClick();
+                }
+
+                if (num != 0 && IsEqualsBtnClicked == true) 
+                {
+                    label1.Text += " " + (sender as Button).Text;
+                    displayBox.Text = "";
                 }
 
                 if (num != 0 && IsEqualsBtnClicked == false)
@@ -206,39 +269,6 @@ namespace SuperCalc
                     op = (sender as Button).Text;
                 }
             }
-        }
-
-        /// <summary>
-        /// Performs the necessary calculation between the two number inputs
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EqualsButton_Click(object sender, EventArgs e)
-        {
-            if (IsDataValid() == true && op != "sqrt" && op != "1/X") 
-            {
-                if (IsEqualsBtnClicked == false) 
-                {
-                    label1.Text += " " + displayBox.Text;
-
-                    //If user tries to divide by zero
-                    if (op == "/" && Convert.ToDouble(displayBox.Text) == 0)
-                    {
-                        displayBox.Text = "Cannot divide by zero";
-                    }
-                    else 
-                    {
-                        double total = PerformCalculation();
-
-                        //Display the result in the display box
-                        displayBox.Text = total.ToString();
-
-                        decimalButton.Enabled = false;
-                    }               
-                }
-            }
-
-            IsEqualsBtnClicked = true;
         }
 
         private bool IsDataValid()
